@@ -2,21 +2,9 @@
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
-REM ── 检查必需的环境变量 ──
-set MISSING=
-if not defined LOGIN_USER set MISSING=%MISSING% LOGIN_USER
-if not defined LOGIN_PASS set MISSING=%MISSING% LOGIN_PASS
-
-if defined MISSING (
-    echo ========================================
-    echo   [ERROR] 缺少必需的环境变量：
-    for %%v in (%MISSING%) do echo   * %%v
-    echo.
-    echo   请先设置以上环境变量后再运行。
-    echo ========================================
-    pause
-    exit /b 1
-)
+REM ── 检查 / 提示输入登录凭据 ──
+if not defined LOGIN_USER set /p LOGIN_USER=Enter LOGIN_USER: 
+if not defined LOGIN_PASS set /p LOGIN_PASS=Enter LOGIN_PASS: 
 
 echo ========================================
 echo   Web GUI Tester - Running All Tests

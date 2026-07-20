@@ -14,7 +14,7 @@ name: "键盘流登录"
 description: "用键盘 Tab/Enter 模拟用户登录操作"
 
 vars:
-  login_url: "${LOGIN_URL:-https://github.com/login}"
+  login_url: "${LOGIN_URL:-http://localhost:8765}"
   username: "${LOGIN_USER:-}"
   password: "${LOGIN_PASS:-}"
 

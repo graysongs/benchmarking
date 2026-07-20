@@ -2,22 +2,12 @@
 # 执行 tests/ 下所有测试
 cd "$(dirname "$0")"
 
-# ── 检查必需的环境变量 ──
-MISSING=""
-for VAR in LOGIN_USER LOGIN_PASS; do
-    if [ -z "${!VAR}" ]; then
-        MISSING="$MISSING  • $VAR\n"
-    fi
-done
-
-if [ -n "$MISSING" ]; then
-    echo "========================================"
-    echo "  [ERROR] 缺少必需的环境变量："
-    printf "$MISSING"
-    echo ""
-    echo "  请先设置以上环境变量后再运行。"
-    echo "========================================"
-    exit 1
+# ── 检查 / 提示输入登录凭据 ──
+if [ -z "$LOGIN_USER" ]; then
+    read -p "Enter LOGIN_USER: " LOGIN_USER
+fi
+if [ -z "$LOGIN_PASS" ]; then
+    read -p "Enter LOGIN_PASS: " LOGIN_PASS
 fi
 
 echo "========================================"
