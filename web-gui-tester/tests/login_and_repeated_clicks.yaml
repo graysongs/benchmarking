@@ -1,0 +1,190 @@
+# ============================================================
+# 登录 → 重复坐标点击序列（8 次偏移点击）→ 提交按钮
+#
+# 流程：
+#   1. 登录到目标网站
+#   2. 导航到 /cells.html（表格单元格测试页）
+#   3. 在 (x, y) 坐标点击（第 1 次，对应 Cell-1 中心）
+#   4. 按 3 次 Tab，然后在 (x+10, y+10) 点击（第 2 次）
+#   5. 按 3 次 Tab，然后在 (x+20, y+20) 点击（第 3 次）
+#   6. 共重复 8 次（偏移量 0~70，步长 10）
+#   7. 最后在提交按钮坐标 (a, b) 点击
+#
+# 页面坐标参考（1280×720 视口）：
+#   Cell-1 中心: (75, 87)
+#   提交按钮:    (100, 320)
+# ============================================================
+name: "登录 → 表格单元格重复点击"
+description: "登录后导航到 cells.html，按固定模式执行 8 次坐标点击+Tab 切换，最后点提交"
+
+vars:
+  # ---------- 登录参数 ----------
+  website_url: "${LOGIN_URL:-http://localhost:8765}"
+  cells_url: "${LOGIN_URL:-http://localhost:8765}/cells.html"
+  username_val: "${LOGIN_USER}"
+  password_val: "${LOGIN_PASS}"
+
+  # ---------- 登录页选择器 ----------
+  username_sel: "#username"
+  password_sel: "#password"
+  submit_sel: "button[type='submit']"
+  login_success_sel: "body"
+
+  # ---------- 点击起始坐标 (x, y) ----------
+  # 对应 cells.html Cell-1 中心
+  base_left: "75"
+  base_top: "87"
+
+  # ---------- 提交按钮坐标 (a, b) ----------
+  # 对应 cells.html #submit-btn fixed 定位
+  submit_left: "100"
+  submit_top: "320"
+
+steps:
+  # ── 第一步：登录 ──────────────────────────────────
+  - action: login
+    description: "登录到目标网站"
+    url: "{vars.website_url}"
+    username_selector: "{vars.username_sel}"
+    password_selector: "{vars.password_sel}"
+    submit_selector: "{vars.submit_sel}"
+    success_selector: "{vars.login_success_sel}"
+    username: "{vars.username_val}"
+    password: "{vars.password_val}"
+
+  - action: screenshot
+    description: "登录成功截图"
+    name: "after_login"
+
+  # ── 第二步：导航到表格测试页 ────────────────────
+  - action: navigate
+    description: "跳转到表格单元格测试页"
+    url: "{vars.cells_url}"
+
+  - action: screenshot
+    description: "表格页面截图"
+    name: "cells_page"
+
+  # ── 第 1 次点击: (75, 87) = Cell-1 中心 ──────
+  - action: click_coords
+    description: "坐标点击 #1 (偏移 0)"
+    left: "{vars.base_left}"
+    top: "{vars.base_top}"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 2 次点击: (85, 97) ──
+  - action: click_coords
+    description: "坐标点击 #2 (偏移 +10)"
+    left: "85"
+    top: "97"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 3 次点击: (95, 107) ──
+  - action: click_coords
+    description: "坐标点击 #3 (偏移 +20)"
+    left: "95"
+    top: "107"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 4 次点击: (105, 117) ──
+  - action: click_coords
+    description: "坐标点击 #4 (偏移 +30)"
+    left: "105"
+    top: "117"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 5 次点击: (115, 127) ──
+  - action: click_coords
+    description: "坐标点击 #5 (偏移 +40)"
+    left: "115"
+    top: "127"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 6 次点击: (125, 137) ──
+  - action: click_coords
+    description: "坐标点击 #6 (偏移 +50)"
+    left: "125"
+    top: "137"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 7 次点击: (135, 147) ──
+  - action: click_coords
+    description: "坐标点击 #7 (偏移 +60)"
+    left: "135"
+    top: "147"
+
+  - action: press_key
+    description: "Tab 键 #1/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #2/3"
+    key: "Tab"
+  - action: press_key
+    description: "Tab 键 #3/3"
+    key: "Tab"
+
+  # ── 第 8 次点击: (145, 157) ──
+  - action: click_coords
+    description: "坐标点击 #8 (偏移 +70)"
+    left: "145"
+    top: "157"
+
+  # ── 最后：点击提交按钮 (100, 320) ─────────────
+  - action: click_coords
+    description: "点击提交按钮"
+    left: "{vars.submit_left}"
+    top: "{vars.submit_top}"

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试站点 - 表格单元格</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+    }
+
+    /* 页面 header */
+    .page-header {
+      margin-bottom: 16px;
+    }
+    .page-header h2 {
+      font-size: 20px;
+      color: #1a1a2e;
+      line-height: 28px;
+    }
+    .page-header p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    /* ── 表格布局 ──
+     *  每个 cell 可视尺寸: 110×46px
+     *  Row 1 中心 y ≈ 87, Row 2 中心 y ≈ 133
+     *  第 N 列中心 x = 20 + (N-1)*110 + 55
+     *  第 1 列中心 x ≈ 75
+     */
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    td {
+      width: 100px;
+      height: 36px;
+      padding: 4px;
+      border: 1px solid #d9d9d9;
+      text-align: center;
+      vertical-align: middle;
+    }
+    /* 圆角处理 */
+    table tr:first-child td:first-child { border-top-left-radius: 8px; }
+    table tr:first-child td:last-child  { border-top-right-radius: 8px; }
+    table tr:last-child td:first-child  { border-bottom-left-radius: 8px; }
+    table tr:last-child td:last-child   { border-bottom-right-radius: 8px; }
+
+    td input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      padding: 0 4px;
+      font-size: 14px;
+      color: #333;
+      background: transparent;
+      text-align: center;
+    }
+    td input:focus {
+      background: #eff6ff;
+      border-radius: 2px;
+    }
+
+    /* 输入框被填值后的样式（便于截图检查） */
+    td input.filled {
+      background: #ecfdf5;
+      color: #059669;
+    }
+
+    /* ── 提交按钮 ──
+     *  固定定位，坐标 (100, 320)
+     */
+    #submit-btn {
+      position: fixed;
+      top: 320px;
+      left: 100px;
+      padding: 10px 28px;
+      background: #4a6cf7;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(74,108,247,0.3);
+      transition: background .2s, transform .15s;
+      z-index: 999;
+    }
+    #submit-btn:hover { background: #3b5de7; transform: scale(1.03); }
+    #submit-btn:active { transform: scale(0.97); }
+
+    /* 固定定位的状态提示（调试辅助） */
+    .coords-hint {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h2>📋 表格单元格测试</h2>
+    <p>共 8 个输入框，Tab 键可切换焦点，点击坐标测试由自动化脚本执行</p>
+  </div>
+
+  <!--
+    2 行 × 4 列 表格
+    Cell 中心坐标:
+      Row 1: (75,87)  (185,87)  (295,87)  (405,87)
+      Row 2: (75,133) (185,133) (295,133) (405,133)
+  -->
+  <table id="data-table">
+    <tr>
+      <td><input type="text" id="c1" placeholder="C1" tabindex="1"></td>
+      <td><input type="text" id="c2" placeholder="C2" tabindex="2"></td>
+      <td><input type="text" id="c3" placeholder="C3" tabindex="3"></td>
+      <td><input type="text" id="c4" placeholder="C4" tabindex="4"></td>
+    </tr>
+    <tr>
+      <td><input type="text" id="c5" placeholder="C5" tabindex="5"></td>
+      <td><input type="text" id="c6" placeholder="C6" tabindex="6"></td>
+      <td><input type="text" id="c7" placeholder="C7" tabindex="7"></td>
+      <td><input type="text" id="c8" placeholder="C8" tabindex="8"></td>
+    </tr>
+  </table>
+
+  <!-- 提交按钮 — fixed 定位在 (100, 320) -->
+  <button id="submit-btn" data-test-coords="100,320">提 交</button>
+
+  <!-- 调试信息 -->
+  <div class="coords-hint">
+    Cell-1: (75,87) &nbsp;|&nbsp; Submit: (100,320)
+  </div>
+
+  <script>
+    // 为已填值的输入框添加高亮样式（便于截图识别）
+    document.querySelectorAll('td input').forEach(function(inp) {
+      inp.addEventListener('input', function() {
+        if (this.value.trim()) {
+          this.classList.add('filled');
+        } else {
+          this.classList.remove('filled');
+        }
+      });
+    });
+
+    // 提交按钮事件
+    document.getElementById('submit-btn').addEventListener('click', function() {
+      alert('提交成功！');
+    });
+  </script>
+
+</body>
+</html>
