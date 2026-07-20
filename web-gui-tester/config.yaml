@@ -1,0 +1,33 @@
+# ============================================================
+# Web GUI Tester — 全局配置
+# ============================================================
+browser:
+  # 浏览器类型: chromium | firefox | webkit
+  type: chromium
+  # 使用系统已安装的 Chrome（而不是下载 Playwright 内置的 Chromium）
+  channel: chrome
+  # 指定 Chrome 可执行文件路径（可选，设置了 channel 通常会自动找到）
+  executable_path: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+  # headless 模式（无界面运行）
+  headless: false
+  # 浏览器窗口大小
+  viewport:
+    width: 1280
+    height: 720
+  # 启动参数（可选）
+  launch_args:
+    - --disable-blink-features=AutomationControlled
+
+timeout:
+  # 元素等待超时（毫秒）
+  element: 10000
+  # 页面加载超时（毫秒）
+  page_load: 30000
+  # 导航超时（毫秒）
+  navigation: 30000
+
+screenshot:
+  # 是否在每个 action 后自动截图
+  auto_capture: true
+  # 截图输出目录（相对于工作目录）
+  output_dir: web-gui-tester/reports/screenshots

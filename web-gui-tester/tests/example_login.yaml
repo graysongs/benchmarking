@@ -1,0 +1,44 @@
+# ============================================================
+# 示例测试套件: 登录流程
+# ============================================================
+name: "登录流程测试"
+description: "打开目标网站并执行登录操作"
+
+steps:
+  # Step 1: 打开登录页面
+  - action: navigate
+    description: "打开登录页面"
+    url: "https://example.com/login"
+
+  # Step 2: 填写用户名
+  - action: fill
+    description: "输入用户名"
+    selector: "#username"
+    value: "your_username"
+
+  # Step 3: 填写密码
+  - action: fill
+    description: "输入密码"
+    selector: "#password"
+    value: "your_password"
+
+  # Step 4: 点击登录按钮
+  - action: click
+    description: "点击登录按钮"
+    selector: "#login-btn"
+
+  # Step 5: 等待登录成功（检查跳转后的页面出现某个元素）
+  - action: wait
+    description: "等待页面加载完成"
+    selector: ".dashboard-header"
+    state: "visible"
+
+  # Step 6: 断言登录成功（URL 包含 dashboard）
+  - action: assert_url
+    description: "验证跳转到仪表盘页面"
+    contains: "/dashboard"
+
+  # Step 7: 截图留存
+  - action: screenshot
+    description: "截取登录成功后的页面"
+    name: "login_success"

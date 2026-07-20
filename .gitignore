@@ -1,0 +1,23 @@
+# Superpowers 技能系统（克隆的外部项目）
+.superpowers/
+
+# 用户规则（本地环境特定约束）
+user_rules/
+
+# IDE / 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Web GUI Tester 输出
+web-gui-tester/reports/

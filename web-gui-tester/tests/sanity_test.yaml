@@ -1,0 +1,19 @@
+# ============================================================
+# 冒烟测试 — 验证工具本身可用
+# 打开百度并截图，确认 Chrome 能正常启动和导航
+# ============================================================
+name: "冒烟测试"
+description: "打开百度首页并截图，确认浏览器可正常启动"
+
+steps:
+  - action: navigate
+    description: "打开百度首页"
+    url: "https://www.baidu.com"
+
+  - action: screenshot
+    description: "截取首页"
+    name: "baidu_homepage"
+
+  - action: assert_url
+    description: "确认 URL 包含 baidu"
+    contains: "baidu.com"
