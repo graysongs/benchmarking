@@ -17,6 +17,7 @@ browser:
   # 启动参数（可选）
   launch_args:
     - --disable-blink-features=AutomationControlled
+    - --disable-popup-blocking
 
 timeout:
   # 元素等待超时（毫秒）

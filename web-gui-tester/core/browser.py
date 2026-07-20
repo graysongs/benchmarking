@@ -56,6 +56,42 @@ class BrowserManager:
         timeout = self.config["timeout"]["navigation"]
         self.page.goto(url, timeout=timeout, wait_until="networkidle")
 
+    @property
+    def page_count(self) -> int:
+        """当前浏览器上下文中的页面数量"""
+        if self._context:
+            return len(self._context.pages)
+        return 0
+
+    def switch_to_page(self, page: Page) -> Page:
+        """直接设置为指定 Page 对象（用于 popup 等场景）"""
+        self._page = page
+        self._page.bring_to_front()
+        self._page.set_default_timeout(self.config["timeout"]["element"])
+        return self._page
+
+    def switch_page(self, page_index: int = -1) -> Page:
+        """切换到 context 中指定索引的页面（默认切到最新/最后一个页面）
+
+        Args:
+            page_index: 页面索引，-1 表示最新页面
+
+        Returns:
+            切换后的 Page 对象
+        """
+        pages = self._context.pages
+        if not pages:
+            raise RuntimeError("浏览器上下文中没有页面")
+        if page_index < 0:
+            page_index = len(pages) + page_index
+        if page_index < 0 or page_index >= len(pages):
+            raise RuntimeError(f"页面索引 {page_index} 超出范围 (共 {len(pages)} 个页面)")
+
+        self._page = pages[page_index]
+        self._page.bring_to_front()
+        self._page.set_default_timeout(self.config["timeout"]["element"])
+        return self._page
+
     def screenshot(self, name: str = None) -> str:
         """截取当前页面截图"""
         output_dir = Path(self.config["screenshot"]["output_dir"])

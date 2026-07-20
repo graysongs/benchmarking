@@ -101,6 +101,8 @@ class TestRunner:
         try:
             self.browser.start()
             page = self.browser.page
+            # 将浏览器管理器注入上下文，供 action 使用（如 switch_to_new_page）
+            self.context["_browser_manager"] = self.browser
 
             for i, step in enumerate(steps, 1):
                 action_name = step.get("action", "?")
@@ -112,6 +114,8 @@ class TestRunner:
 
                 try:
                     result = execute_action(page, resolved_step, self.context)
+                    # 如果 action 切换了页面（如 switch_to_new_page），同步更新 page 引用
+                    page = self.browser.page
                     result["step"] = i
                     result["action"] = action_name
                     result["status"] = "PASS"

@@ -1,0 +1,65 @@
+# ============================================================
+# 登录 → 坐标点击触发弹窗 → 弹窗截图 测试
+# （通用模板 — 修改 vars 适配不同站点）
+#
+# 前置条件：
+#   1. 设置环境变量 LOGIN_URL、LOGIN_USER、LOGIN_PASS
+#   2. 根据实际页面调整选择器和坐标值
+#
+# 关键参数（在 vars 中定义，按需修改）：
+#   - popup_btn_left / popup_btn_top : 触发弹窗按钮的视口坐标
+#   - website_url / 登录选择器
+# ============================================================
+name: "登录 → 弹窗截图"
+description: "登录网站，点击指定坐标位置触发弹窗，等待弹窗加载后截图"
+
+vars:
+  # ---------- 登录参数 ----------
+  website_url: "${LOGIN_URL}"
+  username_val: "${LOGIN_USER}"
+  password_val: "${LOGIN_PASS}"
+
+  # ---------- 弹窗按钮坐标（视口坐标，根据分辨率调整） ----------
+  # "open summary window" button
+  popup_btn_left: "50"
+  popup_btn_top: "100"
+
+  # ---------- 登录页元素选择器（根据实际页面修改） ----------
+  username_sel: "#username"
+  password_sel: "#password"
+  submit_sel: "button[type='submit']"
+  # 登录成功后等待出现的元素（用于确认登录完成）
+  login_success_sel: "body"
+
+steps:
+  # ── 第一步：登录 ──────────────────────────────────
+  - action: login
+    description: "登录到目标网站"
+    url: "{vars.website_url}"
+    username_selector: "{vars.username_sel}"
+    password_selector: "{vars.password_sel}"
+    submit_selector: "{vars.submit_sel}"
+    success_selector: "{vars.login_success_sel}"
+    username: "{vars.username_val}"
+    password: "{vars.password_val}"
+
+  - action: screenshot
+    description: "截取登录后的页面"
+    name: "after_login"
+
+  # ── 第二步：坐标点击 + 自动等待弹窗 ──────────────
+  - action: click_coords_expect_popup
+    description: "点击『打开汇总窗口』按钮，等待弹窗并切换"
+    left: "{vars.popup_btn_left}"
+    top: "{vars.popup_btn_top}"
+    button: "open summary window"
+    timeout: 15000
+
+  # ── 第三步：截图新弹窗 ──────────────────────────
+  - action: screenshot
+    description: "截取弹窗页面"
+    name: "popup_window"
+
+  - action: assert_url
+    description: "确认已切换到弹窗页面"
+    contains: "http"

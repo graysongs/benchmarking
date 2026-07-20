@@ -163,6 +163,51 @@ def _action_assert_visible(page: Page, step: dict, context: dict) -> dict:
     return {"status": "ok"}
 
 
+def _action_click_coords(page: Page, step: dict, context: dict) -> dict:
+    """在视口指定坐标点击 (left=x, top=y)"""
+    left = float(step["left"])
+    top = float(step["top"])
+    button = step.get("button", "")
+    page.mouse.click(left, top)
+    return {
+        "status": "ok",
+        "left": left,
+        "top": top,
+        "button": button,
+    }
+
+
+def _action_click_coords_expect_popup(page: Page, step: dict, context: dict) -> dict:
+    """在视口坐标点击，并等待弹窗/新页面出现后自动切换过去
+
+    使用 Playwright 的 expect_popup() 机制，必须在点击前注册监听。
+    """
+    left = float(step["left"])
+    top = float(step["top"])
+    button = step.get("button", "")
+    timeout_ms = step.get("timeout", 15000)
+
+    with page.expect_popup() as popup_info:
+        page.mouse.click(left, top)
+
+    new_page = popup_info.value
+    new_page.wait_for_load_state("networkidle")
+
+    # 通过 context 将新页面写回 browser manager，以便后续 action 使用
+    browser = context.get("_browser_manager")
+    if browser:
+        browser.switch_to_page(new_page)
+
+    return {
+        "status": "ok",
+        "left": left,
+        "top": top,
+        "button": button,
+        "old_url": page.url,
+        "new_url": new_page.url,
+    }
+
+
 # ---------- Action 注册表 ----------
 
 ACTION_REGISTRY = {
@@ -171,6 +216,8 @@ ACTION_REGISTRY = {
     "fill": _action_fill,
     "fill_active": _action_fill_active,
     "click": _action_click,
+    "click_coords": _action_click_coords,
+    "click_coords_expect_popup": _action_click_coords_expect_popup,
     "select": _action_select,
     "type": _action_type,
     "press_key": _action_press_key,
