@@ -1,6 +1,8 @@
 """
 测试套件执行引擎 — 解析 YAML 测试用例并逐步骤执行
 """
+import os
+import re
 import sys
 import time
 import yaml
@@ -17,6 +19,57 @@ class TestRunner:
         self.config = config
         self.browser = BrowserManager(config)
         self.context = {}  # 跨步骤共享的上下文（可用于变量传递）
+        self._vars = {}    # 解析后的变量表
+
+    # ── 变量解析 ─────────────────────────────────────
+
+    def _resolve_vars(self, suite: dict):
+        """解析套件中的 vars 定义"""
+        raw_vars = suite.get("vars", {})
+        for key, value in raw_vars.items():
+            if isinstance(value, str):
+                # 替换 ${ENV_VAR} 为环境变量
+                self._vars[key] = re.sub(
+                    r'\$\{(\w+)\}',
+                    lambda m: os.environ.get(m.group(1), ""),
+                    value,
+                )
+            else:
+                self._vars[key] = value
+
+    def _interpolate(self, value, step: dict) -> str:
+        """在值中替换 {vars.xxx} 和 ${ENV_VAR} 占位符"""
+        if not isinstance(value, str):
+            return value
+        # {vars.xxx} → self._vars["xxx"]
+        result = re.sub(
+            r'\{vars\.(\w+)\}',
+            lambda m: str(self._vars.get(m.group(1), "")),
+            value,
+        )
+        # ${ENV_VAR} → 环境变量
+        result = re.sub(
+            r'\$\{(\w+)\}',
+            lambda m: os.environ.get(m.group(1), ""),
+            result,
+        )
+        return result
+
+    def _interpolate_step(self, step: dict) -> dict:
+        """递归替换 step 中所有字符串值的占位符"""
+        resolved = {}
+        for key, value in step.items():
+            if isinstance(value, str):
+                resolved[key] = self._interpolate(value, step)
+            elif isinstance(value, dict):
+                resolved[key] = {k: self._interpolate(v, step) for k, v in value.items()}
+            elif isinstance(value, list):
+                resolved[key] = [self._interpolate(item, step) if isinstance(item, str) else item for item in value]
+            else:
+                resolved[key] = value
+        return resolved
+
+    # ── 测试执行 ─────────────────────────────────────
 
     def run_suite(self, suite_path: str | Path) -> list[dict]:
         """运行一个测试套件文件"""
@@ -30,6 +83,7 @@ class TestRunner:
         name = suite.get("name", suite_path.stem)
         description = suite.get("description", "")
         steps = suite.get("steps", [])
+        self._resolve_vars(suite)
 
         if not steps:
             print(f"  ⚠  测试套件 '{name}' 中没有 steps，跳过")
@@ -53,8 +107,11 @@ class TestRunner:
                 description = step.get("description", action_name)
                 print(f"\n  [{i}/{len(steps)}] {description} ... ", end="", flush=True)
 
+                # 变量替换
+                resolved_step = self._interpolate_step(step)
+
                 try:
-                    result = execute_action(page, step, self.context)
+                    result = execute_action(page, resolved_step, self.context)
                     result["step"] = i
                     result["action"] = action_name
                     result["status"] = "PASS"

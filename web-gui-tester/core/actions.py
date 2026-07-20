@@ -30,7 +30,7 @@ def _action_navigate(page: Page, step: dict, context: dict) -> dict:
     """导航到 URL"""
     url = step["url"]
     timeout = step.get("timeout", 30000)
-    page.goto(url, timeout=timeout, wait_until="networkidle")
+    page.goto(url, timeout=timeout, wait_until="load")
     return {"status": "ok", "url": url}
 
 
@@ -98,6 +98,22 @@ def _action_login(page: Page, step: dict, context: dict) -> dict:
     return {"status": "ok", "action": "login"}
 
 
+def _action_press_key(page: Page, step: dict, context: dict) -> dict:
+    """模拟按键（Tab, Enter, Escape, ArrowDown 等）"""
+    key = step["key"]
+    delay = step.get("delay", 50)
+    page.keyboard.press(key, delay=delay)
+    return {"status": "ok", "key": key}
+
+
+def _action_fill_active(page: Page, step: dict, context: dict) -> dict:
+    """在当前聚焦的输入框填入内容"""
+    value = step["value"]
+    delay = step.get("delay", 20)
+    page.keyboard.type(value, delay=delay)
+    return {"status": "ok"}
+
+
 def _action_screenshot(page: Page, step: dict, context: dict) -> dict:
     """截图"""
     name = step.get("name", None)
@@ -113,11 +129,16 @@ def _action_screenshot(page: Page, step: dict, context: dict) -> dict:
 
 
 def _action_assert_url(page: Page, step: dict, context: dict) -> dict:
-    """断言当前 URL 包含指定文本"""
-    expected = step["contains"]
+    """断言当前 URL 包含（或不包含）指定文本"""
     current_url = page.url
-    if expected not in current_url:
-        raise ActionError(f"URL 断言失败: 期望包含 '{expected}', 实际为 '{current_url}'")
+    if "contains" in step:
+        expected = step["contains"]
+        if expected not in current_url:
+            raise ActionError(f"URL 断言失败: 期望包含 '{expected}', 实际为 '{current_url}'")
+    if "not_contains" in step:
+        unexpected = step["not_contains"]
+        if unexpected in current_url:
+            raise ActionError(f"URL 断言失败: 期望不包含 '{unexpected}', 实际为 '{current_url}'")
     return {"status": "ok", "url": current_url}
 
 
@@ -148,9 +169,11 @@ ACTION_REGISTRY = {
     "navigate": _action_navigate,
     "wait": _action_wait,
     "fill": _action_fill,
+    "fill_active": _action_fill_active,
     "click": _action_click,
     "select": _action_select,
     "type": _action_type,
+    "press_key": _action_press_key,
     "login": _action_login,
     "screenshot": _action_screenshot,
     "assert_url": _action_assert_url,
