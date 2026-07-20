@@ -117,7 +117,9 @@ def _action_fill_active(page: Page, step: dict, context: dict) -> dict:
 def _action_screenshot(page: Page, step: dict, context: dict) -> dict:
     """截图"""
     name = step.get("name", None)
-    output_dir = step.get("output_dir", "reports/screenshots")
+    # 优先使用配置中的 output_dir，其次 step 中的 output_dir，最后硬编码默认值
+    default_output_dir = context.get("_screenshot_dir", "reports/screenshots")
+    output_dir = step.get("output_dir", default_output_dir)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     timestamp = time.strftime("%Y%m%d_%H%M%S")

@@ -20,9 +20,9 @@ vars:
   password_val: "${LOGIN_PASS}"
 
   # ---------- 弹窗按钮坐标（视口坐标，根据分辨率调整） ----------
-  # "open summary window" button
-  popup_btn_left: "50"
-  popup_btn_top: "100"
+  # "open summary window" button (测试服务器 1280x720 下按钮中心约 left=123, top=120)
+  popup_btn_left: "85"
+  popup_btn_top: "120"
 
   # ---------- 登录页元素选择器（根据实际页面修改） ----------
   username_sel: "#username"

@@ -29,6 +29,6 @@ timeout:
 
 screenshot:
   # 是否在每个 action 后自动截图
-  auto_capture: true
+  auto_capture: false
   # 截图输出目录（相对于工作目录）
   output_dir: web-gui-tester/reports/screenshots

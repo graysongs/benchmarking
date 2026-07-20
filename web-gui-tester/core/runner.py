@@ -103,6 +103,8 @@ class TestRunner:
             page = self.browser.page
             # 将浏览器管理器注入上下文，供 action 使用（如 switch_to_new_page）
             self.context["_browser_manager"] = self.browser
+            # 截图输出目录注入上下文，供 screenshot action 使用
+            self.context["_screenshot_dir"] = self.config["screenshot"]["output_dir"]
 
             for i, step in enumerate(steps, 1):
                 action_name = step.get("action", "?")

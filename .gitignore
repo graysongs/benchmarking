@@ -22,3 +22,6 @@ build/
 # 测试截图输出
 web-gui-tester/reports/
 reports/
+
+# 测试服务器 PID 文件
+*.pid
