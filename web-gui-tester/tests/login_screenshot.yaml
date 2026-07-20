@@ -1,6 +1,6 @@
 # ============================================================
-# GitHub 登录测试（键盘模拟版）
-# 凭据通过环境变量 GITHUB_USER / GITHUB_PASS 传入
+# 键盘流登录测试（Tab/Enter 模拟用户登录操作）
+# 凭据通过环境变量 LOGIN_USER / LOGIN_PASS 传入
 #
 # 流程：
 #   1. 打开登录页（自动聚焦到用户名输入框）
@@ -10,21 +10,22 @@
 #   5. 按 Enter 提交
 #   6. 验证登录成功
 # ============================================================
-name: "GitHub 登录（键盘流）"
+name: "键盘流登录"
 description: "用键盘 Tab/Enter 模拟用户登录操作"
 
 vars:
-  username: "${LOGIN_USER}"
-  password: "${LOGIN_PASS}"
+  login_url: "${LOGIN_URL:-https://github.com/login}"
+  username: "${LOGIN_USER:-}"
+  password: "${LOGIN_PASS:-}"
 
 steps:
   - action: navigate
-    description: "打开 GitHub 登录页"
-    url: "https://github.com/login"
+    description: "打开登录页"
+    url: "{vars.login_url}"
 
   - action: screenshot
     description: "截取登录页初始状态"
-    name: "github_login_page"
+    name: "login_page"
 
   - action: fill_active
     description: "填入用户名（当前聚焦在 username 输入框）"
@@ -47,13 +48,9 @@ steps:
     timeout: 5000
 
   - action: assert_url
-    description: "验证已跳转到 GitHub 首页（非 /login）"
-    contains: "github.com/"
-
-  - action: assert_url
-    description: "确认不在登录页（登录成功）"
+    description: "验证已跳转到目标站首页"
     not_contains: "/login"
 
   - action: screenshot
     description: "截取登录后的页面"
-    name: "github_logged_in"
+    name: "logged_in"

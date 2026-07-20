@@ -12,7 +12,7 @@ export LOGIN_USER="your_username"
 export LOGIN_PASS="your_password"
 
 # 跑测试
-python run.py tests/github_login.yaml
+python run.py tests/login_screenshot.yaml
 
 # 查看所有可用 action
 python run.py --list-actions
@@ -156,7 +156,7 @@ web-gui-tester/
 │   ├── config.py                # YAML 配置加载
 │   └── runner.py                # 测试执行引擎
 ├── tests/
-│   ├── github_login.yaml        # GitHub 登录测试示例（键盘流）
+│   ├── login_screenshot.yaml      # 键盘流登录测试（Tab/Enter 操作）
 │   └── login_and_popup_screenshot.yaml  # 登录 + 弹窗截图示例
 └── test-server/
     ├── test_server.py                # 本地 HTTP 测试服务器

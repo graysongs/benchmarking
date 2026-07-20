@@ -28,10 +28,10 @@ class TestRunner:
         raw_vars = suite.get("vars", {})
         for key, value in raw_vars.items():
             if isinstance(value, str):
-                # 替换 ${ENV_VAR} 为环境变量
+                # 替换 ${ENV_VAR} 或 ${ENV_VAR:-default} 为环境变量
                 self._vars[key] = re.sub(
-                    r'\$\{(\w+)\}',
-                    lambda m: os.environ.get(m.group(1), ""),
+                    r'\$\{(\w+)(?::-(.*?))?\}',
+                    lambda m: os.environ.get(m.group(1), m.group(2) or ""),
                     value,
                 )
             else:
@@ -47,10 +47,10 @@ class TestRunner:
             lambda m: str(self._vars.get(m.group(1), "")),
             value,
         )
-        # ${ENV_VAR} → 环境变量
+        # ${ENV_VAR} 或 ${ENV_VAR:-default} → 环境变量
         result = re.sub(
-            r'\$\{(\w+)\}',
-            lambda m: os.environ.get(m.group(1), ""),
+            r'\$\{(\w+)(?::-(.*?))?\}',
+            lambda m: os.environ.get(m.group(1), m.group(2) or ""),
             result,
         )
         return result
