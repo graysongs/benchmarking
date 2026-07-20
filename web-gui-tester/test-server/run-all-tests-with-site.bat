@@ -39,7 +39,7 @@ for %%f in ("tests\*.yaml") do (
 
 REM ── 停止测试服务器 ──
 echo [3/3] 停止测试服务器...
-call test-server\stop-test-site.bat
+call test-server\stop.bat
 echo   服务器已停止
 echo.
 

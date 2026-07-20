@@ -34,10 +34,6 @@ playwright install chrome
 test-server\run-all-tests-with-site.bat
 ```
 
-**macOS / Linux:**
-```bash
-test-server/run-all-tests-with-site.sh
-```
 
 > 内置测试站点接受任意用户名密码，无需额外配置。
 
@@ -53,13 +49,10 @@ python test-server/test_server.py
 
 # 3. 运行全部测试
 run-all-tests.bat          # Windows
-# 或
-run-all-tests.sh           # macOS / Linux
 
 # 4. 手动停止测试服务器
-test-server\stop-test-site.bat   # Windows
-# 或
-test-server/stop-test-site.sh    # macOS / Linux
+test-server\stop.bat             # Windows
+
 ```
 
 ### 方式三：运行单个测试
@@ -181,7 +174,7 @@ screenshot:
 web-gui-tester/
 ├── run.py                       # CLI 入口
 ├── config.yaml                  # 全局配置
-├── run-all-tests.bat/.sh        # 批量运行所有测试
+├── run-all-tests.bat            # 批量运行所有测试
 ├── core/
 │   ├── actions.py               # Action 注册表（所有可执行步骤）
 │   ├── browser.py               # Playwright 浏览器管理器
@@ -192,8 +185,8 @@ web-gui-tester/
 │   └── login_and_popup_screenshot.yaml    # 登录 + 弹窗截图
 └── test-server/
     ├── test_server.py                     # 本地 HTTP 测试服务器
-    ├── run-all-tests-with-site.bat/.sh    # 一键：启动站点 → 批量测试 → 停止
-    ├── start-test-site.bat/.sh            # 启动脚本
-    ├── stop-test-site.bat/.sh             # 停止脚本
+    ├── run-all-tests-with-site.bat        # 一键：启动站点 → 批量测试 → 停止
+    ├── start.bat                         # 启动脚本
+    ├── stop.bat                          # 停止脚本
     └── test-site/                         # 测试用静态页面
 ```
