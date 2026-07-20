@@ -14,8 +14,8 @@ name: "GitHub 登录（键盘流）"
 description: "用键盘 Tab/Enter 模拟用户登录操作"
 
 vars:
-  username: "${GITHUB_USER}"
-  password: "${GITHUB_PASS}"
+  username: "${LOGIN_USER}"
+  password: "${LOGIN_PASS}"
 
 steps:
   - action: navigate
