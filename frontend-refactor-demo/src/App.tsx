@@ -4,6 +4,7 @@ import {
   DashboardOutlined,
   EditOutlined,
   ExperimentOutlined,
+  LineChartOutlined,
   RocketOutlined,
   SafetyCertificateOutlined,
 } from '@ant-design/icons';
@@ -12,11 +13,13 @@ import OverviewPage from './pages/OverviewPage';
 import TechStackPage from './pages/TechStackPage';
 import MigrationPlanPage from './pages/MigrationPlanPage';
 import TestingPage from './pages/TestingPage';
+import TrendsPage from './pages/TrendsPage';
 
 const { Header, Sider, Content } = Layout;
 
 const MENU_ITEMS = [
   { key: '/overview', icon: <DashboardOutlined />, label: '方案总览' },
+  { key: '/trends', icon: <LineChartOutlined />, label: '行业趋势' },
   { key: '/tech-stack', icon: <ExperimentOutlined />, label: '技术栈详解' },
   { key: '/migration-plan', icon: <EditOutlined />, label: '迁移计划表格' },
   { key: '/testing', icon: <SafetyCertificateOutlined />, label: '测试与切换' },
@@ -72,6 +75,7 @@ function Shell() {
           <Routes>
             <Route path="/" element={<Navigate to="/overview" replace />} />
             <Route path="/overview" element={<OverviewPage />} />
+            <Route path="/trends" element={<TrendsPage />} />
             <Route path="/tech-stack" element={<TechStackPage />} />
             <Route path="/migration-plan" element={<MigrationPlanPage />} />
             <Route path="/testing" element={<TestingPage />} />
