@@ -38,6 +38,7 @@ import {
 type EditableColumn = ColumnsType<MigrationItem>[number] & {
   editable?: boolean;
   inputType?: 'text' | 'number' | 'select';
+  dataIndex?: string | readonly string[];
 };
 
 interface EditableCellProps extends HTMLAttributes<HTMLElement> {
