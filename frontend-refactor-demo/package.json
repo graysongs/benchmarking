@@ -1,0 +1,42 @@
+{
+  "name": "frontend-refactor-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "可商用前端重构方案交互 Demo：React + TypeScript + Vite + Ant Design，包含技术栈点击详情、可编辑表格与测试切换演示。",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:plan": "playwright test tests/e2e/migration-plan.spec.ts"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.5.1",
+    "antd": "^5.22.2",
+    "dayjs": "^1.11.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "zustand": "^5.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}
